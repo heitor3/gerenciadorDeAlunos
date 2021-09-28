@@ -15,8 +15,8 @@ function App() {
   const [data, setData] = useState([]);
 
   const [modalIncluir, setModalIncluir] = useState(false);
-
   const [modalEditar, setModalEditar] = useState(false);
+  const [modalExcluir, setModalExcluir] = useState(false);
 
   const [alunoSelecionado, setAlunoSelecionado] = useState({
     id: '',
@@ -27,15 +27,20 @@ function App() {
 
   const selecionarAluno = (aluno, opcao) => {
     setAlunoSelecionado(aluno);
-    (opcao === "Editar") &&
-      abrirFecharModalEditar();
+    (opcao === "Editar") ?
+      abrirFecharModalEditar() : abrirFecharModalExcluir();
   }
 
   const abrirFecharModalIncluir = () => {
     setModalIncluir(!modalIncluir);
   }
+
   const abrirFecharModalEditar = () => {
     setModalEditar(!modalEditar);
+  }
+
+  const abrirFecharModalExcluir = () => {
+    setModalExcluir(!modalExcluir);
   }
 
   const handleChange = x => {
@@ -76,7 +81,7 @@ function App() {
         var dadosAuxiliar = data;
         console.log("data" + data)
 
-        dadosAuxiliar.map(aluno => {
+        dadosAuxiliar.forEach(aluno => {
           if (aluno.id === alunoSelecionado.id) {
             aluno.nome = resposta.nome;
             aluno.email = resposta.email;
@@ -89,9 +94,19 @@ function App() {
       })
   }
 
+  const pedidoDelete = async () => {
+    await axios.delete(baseUrl + "/" + alunoSelecionado.id)
+      .then(response => {
+        setData(data.filter(aluno => aluno.id !== response.data));
+        abrirFecharModalExcluir();
+      }).catch(error => {
+        console.log(error);
+      })
+  }
+
   useEffect(() => {
     pedidoGet();
-  });
+  }, [data]);
 
   return (
     <div className="aluno-container">
@@ -245,6 +260,17 @@ function App() {
           </button>
         </ModalFooter>
       </Modal>
+
+      <Modal isOpen={ modalExcluir }>
+        <ModalBody>
+          Confirmar exclusão deste(a) aluno(a): { alunoSelecionado && alunoSelecionado.nome }?
+        </ModalBody>
+        <ModalFooter>
+          <button className="btn btn-danger" onClick={ () => pedidoDelete() }>Sim</button>
+          <button className="btn btn-secondary" onClick={ () => abrirFecharModalExcluir() }>Não</button>
+        </ModalFooter>
+      </Modal>
+
     </div>
   );
 }
