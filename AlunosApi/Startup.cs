@@ -30,7 +30,10 @@ namespace AlunosApi
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddScoped<IAuthenticate, AuthenticateServices>();
             services.AddScoped<IAlunoService, AlunosServices>();
+
+            services.AddCors();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

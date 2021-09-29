@@ -9,9 +9,12 @@ namespace AlunosApi.Services
     public class AuthenticateServices : IAuthenticate
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        public AuthenticateServices(SignInManager<IdentityUser> signInManager)
+        private readonly UserManager<IdentityUser> _userManager;
+        public AuthenticateServices(SignInManager<IdentityUser> signInManager,
+            UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public async Task<bool> Authenticate(string email, string password)
@@ -25,6 +28,23 @@ namespace AlunosApi.Services
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<bool> RegisterUser(string email, string password)
+        {
+            var appUser = new IdentityUser
+            {
+                UserName = email,
+                Email = email,
+            };
+
+            var result = await _userManager.CreateAsync(appUser, password);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(appUser, isPersistent: false);
+            }
+            return result.Succeeded;
         }
     }
 }
