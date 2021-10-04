@@ -13,26 +13,26 @@ namespace AlunosApi.Context
 
         public DbSet<Aluno> Alunos { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Aluno>().HasData(
-                new Aluno
-                {
-                    Id = 1,
-                    Nome = "Thalyson Tadeu Delfino Rezende",
-                    Email = "thalyson@gmail.com",
-                    Idade = 27,
-                },
-                new Aluno
-                {
-                    Id = 2,
-                    Nome = "Yago Prestes Montanari Rabelo",
-                    Email = "yago@gmail.com",
-                    Idade = 26,
-                }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Aluno>().HasData(
+        //        new Aluno
+        //        {
+        //            Id = 1,
+        //            Nome = "Thalyson Tadeu Delfino Rezende",
+        //            Email = "thalyson@gmail.com",
+        //            Idade = 27,
+        //        },
+        //        new Aluno
+        //        {
+        //            Id = 2,
+        //            Nome = "Yago Prestes Montanari Rabelo",
+        //            Email = "yago@gmail.com",
+        //            Idade = 26,
+        //        }
 
-                );
-        }
+        //        );
+        //}
 
 
     }
