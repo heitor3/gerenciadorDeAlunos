@@ -16,13 +16,19 @@ export default function Login() {
   async function login(event) {
     event.preventDefault();
 
+    console.log()
+
     const data = {
       email,
       password
     };
 
+    console.log(data)
+
     try {
-      const response = await api.post('/api/account/loginuser', data);
+      const response = await api.post('api/account/loginuser', data)
+      console.log(response.data)
+      console.log(response)
       localStorage.setItem('email', email);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('expiration', response.data.expiration);
