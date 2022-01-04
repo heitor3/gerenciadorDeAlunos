@@ -10,7 +10,7 @@ import './styles.css';
 
 export default function Alunos() {
 
-  const [nome, setNome] = useState('');
+  // const [nome, setNome] = useState('');
   const [alunos, setAlunos] = useState([]);
 
   const email = localStorage.getItem('email');
@@ -69,7 +69,7 @@ export default function Alunos() {
       <h1>Relação de Alunos</h1>
       <ul>
         { alunos.map(aluno => (
-          <li>
+          <li key={ aluno.id }>
             <b>Nome: </b>{ aluno.nome }<br /><br />
             <b>Email: </b>{ aluno.email }<br /><br />
             <b>Idade: </b>{ aluno.idade }<br /><br />
