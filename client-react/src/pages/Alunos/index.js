@@ -10,7 +10,9 @@ import './styles.css';
 
 export default function Alunos() {
 
-  // const [nome, setNome] = useState('');
+  const [searchInput, setSearchInput] = useState([]);
+  const [filtro, setFiltro] = useState([]);
+
   const [alunos, setAlunos] = useState([]);
 
   const email = localStorage.getItem('email');
@@ -22,13 +24,26 @@ export default function Alunos() {
     headers: {
       Authorization: `Bearer ${token}`
     }
-  };
+  }
+
+  const searchAlunos = (searchValue) => {
+    setSearchInput(searchValue);
+    if (searchInput !== '') {
+      const dadosFiltrados = alunos.filter((item) => {
+        return Object.values(item).join('').toLowerCase()
+          .includes(searchInput.toLowerCase())
+      });
+      setFiltro(dadosFiltrados);
+    } else {
+      setFiltro(alunos);
+    }
+  }
 
   useEffect(() => {
     api.get('api/alunos', authorization).then(
       response => {
         setAlunos(response.data)
-      }, token)
+      }, token);
   });
 
   async function logout() {
@@ -61,30 +76,50 @@ export default function Alunos() {
         </button>
       </header>
       <form>
-        <input type="text" placeholder="Nome" />
-        <button type="button" className="button">
-          Filtrar aluno por nome (parcial)
-        </button>
+        <input
+          type="text"
+          placeholder="Filtrar por nome..."
+          onChange={ (e) => searchAlunos(e.target.value) }
+        />
       </form>
       <h1>Relação de Alunos</h1>
-      <ul>
-        { alunos.map(aluno => (
-          <li key={ aluno.id }>
-            <b>Nome: </b>{ aluno.nome }<br /><br />
-            <b>Email: </b>{ aluno.email }<br /><br />
-            <b>Idade: </b>{ aluno.idade }<br /><br />
+      { searchInput.length > 1 ? (
+        <ul>
+          { filtro.map(aluno => (
+            <li key={ aluno.id }>
+              <b>Nome: </b>{ aluno.nome }<br /><br />
+              <b>Email: </b>{ aluno.email }<br /><br />
+              <b>Idade: </b>{ aluno.idade }<br /><br />
 
-            <button type="button" onClick={ () => editAluno(aluno.id) }>
-              <FiEdit size={ 25 } color="#17202a" />
-            </button>
+              <button type="button" onClick={ () => editAluno(aluno.id) }>
+                <FiEdit size={ 25 } color="#17202a" />
+              </button>
 
-            <button type="button">
-              <FiUserX size={ 25 } color="#17202a" />
-            </button>
-          </li>
-        )) }
+              <button type="button">
+                <FiUserX size={ 25 } color="#17202a" />
+              </button>
+            </li>
+          )) }
+        </ul>
+      ) : (
+        <ul>
+          { alunos.map(aluno => (
+            <li key={ aluno.id }>
+              <b>Nome: </b>{ aluno.nome }<br /><br />
+              <b>Email: </b>{ aluno.email }<br /><br />
+              <b>Idade: </b>{ aluno.idade }<br /><br />
 
-      </ul>
+              <button type="button" onClick={ () => editAluno(aluno.id) }>
+                <FiEdit size={ 25 } color="#17202a" />
+              </button>
+
+              <button type="button">
+                <FiUserX size={ 25 } color="#17202a" />
+              </button>
+            </li>
+          )) }
+        </ul>
+      ) }
     </div>
   );
 }
