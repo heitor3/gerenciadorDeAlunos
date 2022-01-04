@@ -52,8 +52,8 @@ export default function Alunos() {
       localStorage.setItem('token', '')
       authorization.headers = '';
       history.push('/')
-    } catch (err) {
-      alert('Não foi possível fazer o logout' + err)
+    } catch (error) {
+      alert('Não foi possível fazer o logout' + error)
     }
   }
 
@@ -62,6 +62,17 @@ export default function Alunos() {
       history.push(`/aluno/novo/${id}`);
     } catch (error) {
       alert('Não foi possível editar o aluno ' + error);
+    }
+  }
+
+  async function deleteAluno(id) {
+    try {
+      if (window.confirm('Deseja deletar esse aluno de id = ' + id + '?')) {
+        await api.delete(`api/alunos/${id}`, authorization);
+        setAlunos(alunos.filter(aluno => aluno.id !== id));
+      }
+    } catch (error) {
+      alert('Não foi possível excluir o aluno' + error);
     }
   }
 
@@ -95,7 +106,7 @@ export default function Alunos() {
                 <FiEdit size={ 25 } color="#17202a" />
               </button>
 
-              <button type="button">
+              <button type="button" onClick={ () => deleteAluno(aluno.id) }>
                 <FiUserX size={ 25 } color="#17202a" />
               </button>
             </li>
@@ -113,7 +124,7 @@ export default function Alunos() {
                 <FiEdit size={ 25 } color="#17202a" />
               </button>
 
-              <button type="button">
+              <button type="button" onClick={ () => deleteAluno(aluno.id) }>
                 <FiUserX size={ 25 } color="#17202a" />
               </button>
             </li>
